@@ -20,28 +20,39 @@ include_directories(
   ${PROJECT_BINARY_DIR} # Protos.
   ${PROTOBUF_INCLUDE_DIRS})
 
-set(zmq_wrapper_lib_sources
+set(matrix_malos_zmq_src
   zmq_push.h
   zmq_push.cpp
   zmq_pull.h
   zmq_pull.cpp
 )
 
-add_library(zmq_wrapper_lib ${zmq_wrapper_lib_sources})
-set_property(TARGET zmq_wrapper_lib PROPERTY CXX_STANDARD 11)
-target_link_libraries(zmq_wrapper_lib ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
+add_library(matrix_malos_zmq ${matrix_malos_zmq_src})
+set_property(TARGET matrix_malos_zmq PROPERTY CXX_STANDARD 11)
+target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
-set(malos_src
+set(matrix_malos_src
   malos_base.cpp malos_base.h
   tcp_client.cpp tcp_client.h
   ${MALOS_PROTO_SRC} ${MALOS_PROTO_HEADER}
 )
 
-add_library(malos ${malos_src})
-set_property(TARGET malos PROPERTY CXX_STANDARD 11)
-target_link_libraries(malos zmq_wrapper_lib)
-target_link_libraries(malos ${PROTOBUF_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(malos wiringPi)
+add_library(matrix_malos ${matrix_malos_src})
+set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
+target_link_libraries(matrix_malos matrix_malos_zmq)
+target_link_libraries(matrix_malos ${PROTOBUF_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
 
 # Binary to be installed.
-install(TARGETS malos DESTINATION lib)
+install(TARGETS matrix_malos_zmq DESTINATION lib)
+install(TARGETS matrix_malos DESTINATION lib)
+
+set (matrix_malos_headers
+  malos_base.h
+  tcp_client.h
+  third_party/zmq.hpp
+  zmq_pull.h
+  zmq_push.h
+)
+
+install (FILES ${matrix_malos_headers} DESTINATION include/matrix_malos)
+
