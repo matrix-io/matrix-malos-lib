@@ -49,10 +49,10 @@ install(TARGETS matrix_malos DESTINATION lib)
 set (matrix_malos_headers
   malos_base.h
   tcp_client.h
-  third_party/zmq.hpp
   zmq_pull.h
   zmq_push.h
 )
 
 install (FILES ${matrix_malos_headers} DESTINATION include/matrix_malos)
+install (FILES third_party/zmq.hpp  DESTINATION include/matrix_malos/third_party)
 
