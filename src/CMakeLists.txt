@@ -33,7 +33,6 @@ target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
 set(matrix_malos_src
   malos_base.cpp malos_base.h
-  tcp_client.cpp tcp_client.h
   ${MALOS_PROTO_SRC} ${MALOS_PROTO_HEADER}
 )
 
@@ -48,7 +47,6 @@ install(TARGETS matrix_malos DESTINATION lib)
 
 set (matrix_malos_headers
   malos_base.h
-  tcp_client.h
   zmq_pull.h
   zmq_push.h
 )
