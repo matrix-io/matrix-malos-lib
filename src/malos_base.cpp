@@ -90,10 +90,10 @@ void MalosBase::ConfigThread() {
 
       // Shall we set a new delay between updates?
       if (config.delay_between_updates() > 0) {
-        std::cerr << "New delay between updates for " << driver_name_ << " is "
-                  << delay_between_updates_ << " ms." << std::endl;
         delay_between_updates_ =
             config.delay_between_updates() * static_cast<float>(1000);
+        std::cerr << "New delay between updates for " << driver_name_ << " is "
+                  << delay_between_updates_ << " ms." << std::endl;
       }
 
       // Shall we set a timeout after the last ping?
