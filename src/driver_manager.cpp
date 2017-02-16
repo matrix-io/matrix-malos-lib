@@ -17,7 +17,8 @@
 
 #include <string>
 #include <vector>
-#include <matrix_malos/third_party/zmq.hpp>
+
+#include "../src/third_party/zmq.hpp"
 
 #include "./src/driver.pb.h"
 
