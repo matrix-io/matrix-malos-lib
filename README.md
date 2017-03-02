@@ -7,7 +7,7 @@ sudo apt-get upgrade;
 sudo apt-get install libzmq3-dev cmake g++ git;
 ```
 
-# MALOS
+# MALOS LIB.
 
 Library of Hardware abstraction for MATRIX Creator usable via 0MQ.
 [Protocol buffers](https://developers.google.com/protocol-buffers/docs/proto3) are used for data exchange.
