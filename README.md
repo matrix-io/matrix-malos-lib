@@ -7,7 +7,12 @@ sudo apt-get upgrade;
 sudo apt-get install libzmq3-dev cmake g++ git;
 ```
 
-[Protocol buffers](https://developers.google.com/protocol-buffers/docs/proto3): Please follow the [C++ Installation Instructions](https://github.com/google/protobuf/blob/master/src/README.md)
+# MALOS
+
+Library of Hardware abstraction for MATRIX Creator usable via 0MQ.
+[Protocol buffers](https://developers.google.com/protocol-buffers/docs/proto3) are used for data exchange.
+
+Please follow the [C++ Installation Instructions](https://github.com/google/protobuf/blob/master/src/README.md)
 
 ### Cloning
 ```
