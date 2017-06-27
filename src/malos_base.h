@@ -14,6 +14,8 @@
 
 #include "./src/driver.pb.h"
 
+namespace pb = matrixlabs::malos::v1;
+
 namespace matrix_malos {
 
 class MalosBase {
@@ -52,7 +54,7 @@ class MalosBase {
   // Process device-specific configuration present in the protocol buffer
   // of type DriverConfig. Used by derived classes.
   // Check the Everloop driver for an example.
-  virtual bool ProcessConfig(const DriverConfig &) { return true; }
+  virtual bool ProcessConfig(const pb::driver::DriverConfig &) { return true; }
 
   // Does the device provide updates? This is true by default.
   // Derived classes should call this in their constructors if needed.
@@ -73,7 +75,7 @@ class MalosBase {
   }
 
   // Fill out information about the driver.
-  void FillOutDriverInfo(DriverInfo *driver_info) const;
+  void FillOutDriverInfo(pb::driver::DriverInfo *driver_info) const;
 
  private:
   // Base por of the driver.

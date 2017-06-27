@@ -14,7 +14,7 @@ FIND_LIBRARY(ZMQ_LIB NAMES zmq)
 
 message(STATUS "ZMQ found => " "${ZMQ_LIB}")
 
-PROTOBUF_GENERATE_CPP(MALOS_PROTO_SRC MALOS_PROTO_HEADER ../protocol-buffers/malos/driver.proto)
+PROTOBUF_GENERATE_CPP(MALOS_PROTO_SRC MALOS_PROTO_HEADER ../protocol-buffers/matrixlabs/malos/v1/driver.proto)
 
 include_directories(
   ${PROJECT_BINARY_DIR} # Protos.

@@ -30,9 +30,7 @@ class DriverManager {
       : driver_info_port_(port), bind_scope_(bind_scope) {}
 
   // Register a driver.
-  void RegisterDriver(const MalosBase* driver) {
-    drivers_.push_back(driver);
-  }
+  void RegisterDriver(const MalosBase* driver) { drivers_.push_back(driver); }
 
   void ServeInfoRequestsForEver();
 

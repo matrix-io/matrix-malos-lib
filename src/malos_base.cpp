@@ -66,7 +66,7 @@ void MalosBase::ConfigThread() {
   while (true) {
     if (zmq_pull_config_->Poll(ZmqPuller::WAIT_FOREVER)) {
       std::lock_guard<std::mutex> lock(config_mutex_);
-      DriverConfig config;
+      pb::driver::DriverConfig config;
       // Can we parse a configuration?
       if (!config.ParseFromString(zmq_pull_config_->Read())) {
         std::cerr << "Invalid configuration for " << driver_name_ << " driver."
@@ -143,7 +143,7 @@ void MalosBase::KeepAliveThread() {
   }
 }
 
-void MalosBase::FillOutDriverInfo(DriverInfo *driver_info) const {
+void MalosBase::FillOutDriverInfo(pb::driver::DriverInfo *driver_info) const {
   driver_info->set_driver_name(driver_name_);
   driver_info->set_base_port(base_port_);
   driver_info->set_provides_updates(provides_updates_);
@@ -154,4 +154,3 @@ void MalosBase::FillOutDriverInfo(DriverInfo *driver_info) const {
 }
 
 }  // namespace matrix_malos
-
