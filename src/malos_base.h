@@ -12,7 +12,7 @@
 #include "./zmq_push.h"
 #include "./zmq_pull.h"
 
-#include "./src/driver.pb.h"
+#include "../protocol-buffers/matrixlabs/driver.pb.h"
 
 namespace pb = matrixlabs::malos::v1;
 

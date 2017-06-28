@@ -20,9 +20,9 @@
 
 #include "../src/third_party/zmq.hpp"
 
-#include "./src/driver.pb.h"
-
 #include "./driver_manager.h"
+
+#include "../protocol-buffers/matrixlabs/driver.pb.h"
 
 namespace pb = matrixlabs::malos::v1;
 

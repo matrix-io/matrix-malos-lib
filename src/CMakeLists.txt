@@ -14,12 +14,6 @@ FIND_LIBRARY(ZMQ_LIB NAMES zmq)
 
 message(STATUS "ZMQ found => " "${ZMQ_LIB}")
 
-PROTOBUF_GENERATE_CPP(MALOS_PROTO_SRC MALOS_PROTO_HEADER ../protocol-buffers/matrixlabs/malos/v1/driver.proto)
-
-include_directories(
-  ${PROJECT_BINARY_DIR} # Protos.
-  ${PROTOBUF_INCLUDE_DIRS})
-
 set(matrix_malos_zmq_src
   zmq_push.h
   zmq_push.cpp
@@ -27,6 +21,7 @@ set(matrix_malos_zmq_src
   zmq_pull.cpp
 )
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(matrix_malos_zmq ${matrix_malos_zmq_src})
 set_property(TARGET matrix_malos_zmq PROPERTY CXX_STANDARD 11)
 target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
@@ -34,13 +29,12 @@ target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
 set(matrix_malos_src
   malos_base.cpp malos_base.h
   driver_manager.cpp driver_manager.h
-  ${MALOS_PROTO_SRC} ${MALOS_PROTO_HEADER}
 )
 
 add_library(matrix_malos ${matrix_malos_src})
 set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
 target_link_libraries(matrix_malos matrix_malos_zmq)
-target_link_libraries(matrix_malos ${PROTOBUF_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(matrix_malos ${CMAKE_THREAD_LIBS_INIT})
 
 # Binary to be installed.
 install(TARGETS matrix_malos_zmq DESTINATION lib)
