@@ -22,9 +22,9 @@
 
 #include "./driver_manager.h"
 
-#include "../protocol-buffers/matrixlabs/driver.pb.h"
+#include "../protocol-buffers/matrix/driver.pb.h"
 
-namespace pb = matrixlabs::malos::v1;
+namespace pb = matrix::malos::v1;
 
 namespace matrix_malos {
 
