@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.8)
 include (cmake/FatalWarnings.cmake)
 ADM_EXTRA_WARNINGS()
 
-add_subdirectory(protocol-buffers)
 add_subdirectory(src)
 
 

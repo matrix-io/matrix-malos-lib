@@ -12,9 +12,9 @@
 #include "./zmq_push.h"
 #include "./zmq_pull.h"
 
-#include "../protocol-buffers/matrix/driver.pb.h"
+#include <matrix_io/malos/v1/driver.pb.h>
 
-namespace pb = matrix::malos::v1;
+namespace pb = matrix_io::malos::v1;
 
 namespace matrix_malos {
 
