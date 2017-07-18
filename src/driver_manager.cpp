@@ -20,9 +20,11 @@
 
 #include "../src/third_party/zmq.hpp"
 
-#include "./src/driver.pb.h"
-
 #include "./driver_manager.h"
+
+#include <matrix_io/malos/v1/driver.pb.h>
+
+namespace pb = matrix_io::malos::v1;
 
 namespace matrix_malos {
 
@@ -32,7 +34,7 @@ void DriverManager::ServeInfoRequestsForEver() {
   socket.bind("tcp://" + bind_scope_ + ":" + std::to_string(driver_info_port_));
 
   zmq::message_t request;
-  MalosDriverInfo all_driver_info;
+  pb::driver::MalosDriverInfo all_driver_info;
 
   while (true) {
     all_driver_info.Clear();
@@ -41,7 +43,7 @@ void DriverManager::ServeInfoRequestsForEver() {
 
     // Gather info for all drivers.
     for (const MalosBase* driver : drivers_) {
-      DriverInfo* new_info = all_driver_info.add_info();
+      pb::driver::DriverInfo* new_info = all_driver_info.add_info();
       driver->FillOutDriverInfo(new_info);
     }
 
