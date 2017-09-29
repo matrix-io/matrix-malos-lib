@@ -25,7 +25,7 @@ pipeline:
       - echo "personal-digest-preferences SHA512" >> /root/.gnupg/gpg.conf
 
       # Upload packages
-      - mv libmatrixio_${DRONE_TAG##v}_armhf.deb 
+      - mv libmatrixio-malos_${DRONE_TAG##v}_armhf.deb 
            libmatrixio-malos_${DISTRIBUTION}-${CODENAME}-${DRONE_TAG##v}_armhf.deb
       - mv libmatrixio-malos-dev_${DRONE_TAG##v}_armhf.deb
            libmatrixio-malos-dev_${DISTRIBUTION}-${CODENAME}-${DRONE_TAG##v}_armhf.deb
