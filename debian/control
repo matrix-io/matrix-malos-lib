@@ -1,21 +1,24 @@
-Source: libmatrix-malos
+Source: libmatrixio-malos
 Section: libs
+Conflicts: libmatrix-malos
+Replaces: libmatrix-malos
 Priority: optional
-Maintainer: Admobilize <info@admobilize.com>
+Maintainer: MATRIX Labs <info@matrix.one>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
 Homepage: https://github.com/matrix-io/matrix-malos-lib
 
-Package: libmatrix-malos
+Package: libmatrixio-malos
 Architecture: any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends},libzmq3-dev,protobuf,libmatrixio-protos,libmatrixio-protos-dev
+Depends: ${shlibs:Depends}, ${misc:Depends},libzmq3-dev, matrixio-protobuf,libmatrixio-protos,libmatrixio-protos-dev
 Description: Libraries of MATRIX abstraction layer for MOS
 
-Package: libmatrix-malos-dev
+Package: libmatrixio-malos-dev
 Section: libdevel
+Conflicts: libmatrix-malos-dev
+Replaces: libmatrix-malos-dev
 Architecture: any
-Depends: libmatrix-malos  (= ${binary:Version}), libc6-dev | libc-dev, ${misc:Depends}
+Depends: libmatrixio-malos  (= ${binary:Version}), libc6-dev | libc-dev, ${misc:Depends}
 Description:  Libraries of MATRIX abstraction layer for MOS
-

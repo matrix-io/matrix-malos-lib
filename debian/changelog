@@ -1,10 +1,10 @@
-libmatrix-malos (0.1.2) unstable; urgency=medium
+libmatrixio-malos (0.1.2) unstable; urgency=medium
 
   * Protocol buffers namespaces support
 
  -- Admobilize  <info@admobilize.com>  Mon, 10 Jul 2017 16:57:43 +0000
 
-libmatrix-malos (0.1.1) unstable; urgency=medium
+libmatrixio-malos (0.1.1) unstable; urgency=medium
 
   * Initial realease of MATRIX MALOS lib
 
