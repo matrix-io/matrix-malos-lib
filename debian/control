@@ -11,8 +11,10 @@ Homepage: https://github.com/matrix-io/matrix-malos-lib
 Package: libmatrixio-malos
 Architecture: any
 Multi-Arch: same
+Conflicts: libmatrix-malos
+Replaces: libmatrix-malos
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends},libzmq3-dev, matrixio-protobuf,libmatrixio-protos,libmatrixio-protos-dev
+Depends: ${shlibs:Depends}, ${misc:Depends},libzmq3-dev,libmatrixio-protos,libmatrixio-protos-dev
 Description: Libraries of MATRIX abstraction layer for MOS
 
 Package: libmatrixio-malos-dev
