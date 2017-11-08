@@ -1,6 +1,5 @@
 Source: libmatrixio-malos
 Section: libs
-Conflicts: libmatrix-malos
 Replaces: libmatrix-malos
 Priority: optional
 Maintainer: MATRIX Labs <info@matrix.one>
