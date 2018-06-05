@@ -22,7 +22,7 @@ set(matrix_malos_zmq_src
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-add_library(matrix_malos_zmq ${matrix_malos_zmq_src})
+add_library(matrix_malos_zmq SHARED ${matrix_malos_zmq_src})
 set_property(TARGET matrix_malos_zmq PROPERTY CXX_STANDARD 11)
 target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
@@ -31,7 +31,7 @@ set(matrix_malos_src
   driver_manager.cpp driver_manager.h
 )
 
-add_library(matrix_malos ${matrix_malos_src})
+add_library(matrix_malos SHARED ${matrix_malos_src})
   set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
   target_link_libraries(matrix_malos matrix_malos_zmq)
   target_link_libraries(matrix_malos matrixio_protos)
