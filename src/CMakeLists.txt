@@ -12,7 +12,6 @@ find_package(Threads REQUIRED)
 # FIXME(nelson.castillo): Improve.
 FIND_LIBRARY(ZMQ_LIB NAMES zmq)
 FIND_LIBRARY(MATRIX_PROTOS_LIB NAMES matrixio_protos)
-FIND_LIBRARY(MATRIX_MALOS_LIB NAMES matrixio_protos)
 
 if (MSVC)
   FIND_PATH(ZMQ_INCLUDE_DIR NAMES zmq.hpp)
