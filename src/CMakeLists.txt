@@ -16,6 +16,7 @@ FIND_LIBRARY(MATRIX_PROTOS_LIB NAMES matrixio_protos)
 if (MSVC)
   FIND_PATH(ZMQ_INCLUDE_DIR NAMES zmq.hpp)
   FIND_PATH(MATRIX_PROTOS_INCLUDE_DIR NAMES matrix_io/common/entity.pb.h)
+  set (CMAKE_SHARED_LIBRARY_SUFFIX ".dll")
 endif (MSVC)
 
 message(STATUS "ZMQ found => " "${ZMQ_LIB}")
