@@ -11,8 +11,17 @@ find_package(Threads REQUIRED)
 # This won't find ZQM in custom locations.
 # FIXME(nelson.castillo): Improve.
 FIND_LIBRARY(ZMQ_LIB NAMES zmq)
+FIND_LIBRARY(MATRIX_PROTOS_LIB NAMES matrixio_protos)
+FIND_LIBRARY(MATRIX_MALOS_LIB NAMES matrixio_protos)
+
+if (MSVC)
+  FIND_PATH(ZMQ_INCLUDE_DIR NAMES zmq.hpp)
+  FIND_PATH(MATRIX_PROTOS_INCLUDE_DIR NAMES matrix_io/common/entity.pb.h)
+endif (MSVC)
 
 message(STATUS "ZMQ found => " "${ZMQ_LIB}")
+message(STATUS "Matrix Protos LIB found => " "${MATRIX_PROTOS_LIB}")
+message(STATUS "Protobuf LIB found => " "${PROTOBUF_LIBRARY}")
 
 set(matrix_malos_zmq_src
   zmq_push.h
@@ -34,8 +43,14 @@ set(matrix_malos_src
 add_library(matrix_malos SHARED ${matrix_malos_src})
   set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
   target_link_libraries(matrix_malos matrix_malos_zmq)
-  target_link_libraries(matrix_malos matrixio_protos)
+  target_link_libraries(matrix_malos ${MATRIX_PROTOS_LIB})
   target_link_libraries(matrix_malos ${CMAKE_THREAD_LIBS_INIT})
+
+if (MSVC)
+  include_directories(${ZMQ_INCLUDE_DIR})
+  include_directories(${MATRIX_PROTOS_INCLUDE_DIR})
+  include_directories(${PROTOBUF_INCLUDE_DIR})
+endif (MSVC)
 
 # Binary to be installed.
 install(TARGETS matrix_malos_zmq DESTINATION lib)
