@@ -42,7 +42,7 @@ set(matrix_malos_src
 
 add_library(matrix_malos SHARED ${matrix_malos_src})
   set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
-  target_link_libraries(matrix_malos matrix_malos_zmq)
+  target_link_libraries(matrix_malos matrix_malos_zmq.dll)
   target_link_libraries(matrix_malos ${MATRIX_PROTOS_LIB})
   target_link_libraries(matrix_malos ${CMAKE_THREAD_LIBS_INIT})
 
