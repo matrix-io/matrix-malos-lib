@@ -17,7 +17,6 @@ FIND_LIBRARY(MATRIX_PROTOS_LIB NAMES matrixio_protos)
 if (MSVC)
   FIND_PATH(ZMQ_INCLUDE_DIR NAMES zmq.hpp)
   FIND_PATH(MATRIX_PROTOS_INCLUDE_DIR NAMES matrix_io/common/entity.pb.h)
-  set (CMAKE_SHARED_LIBRARY_SUFFIX ".dll")
 endif (MSVC)
 
 message(STATUS "ZMQ found => " "${ZMQ_LIB}")
@@ -32,7 +31,11 @@ set(matrix_malos_zmq_src
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-add_library(matrix_malos_zmq SHARED ${matrix_malos_zmq_src})
+if (MSVC)
+  add_library(matrix_malos_zmq ${matrix_malos_zmq_src})
+else (MSVC)
+  add_library(matrix_malos_zmq SHARED ${matrix_malos_zmq_src})
+endif (MSVC)
 set_property(TARGET matrix_malos_zmq PROPERTY CXX_STANDARD 11)
 target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
@@ -40,18 +43,23 @@ set(matrix_malos_src
   malos_base.cpp malos_base.h
   driver_manager.cpp driver_manager.h
 )
-
-add_library(matrix_malos SHARED ${matrix_malos_src})
+if (MSVC)
+  add_library(matrix_malos ${matrix_malos_src})
   set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
   target_link_libraries(matrix_malos matrix_malos_zmq.dll)
-  target_link_libraries(matrix_malos ${MATRIX_PROTOS_LIB})
-  target_link_libraries(matrix_malos ${CMAKE_THREAD_LIBS_INIT})
 
-if (MSVC)
   include_directories(${ZMQ_INCLUDE_DIR})
   include_directories(${MATRIX_PROTOS_INCLUDE_DIR})
   include_directories(${PROTOBUF_INCLUDE_DIR})
+else (MSVC)
+  add_library(matrix_malos SHARED ${matrix_malos_src})
+  set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
+  target_link_libraries(matrix_malos matrix_malos_zmq)
 endif (MSVC)
+
+  target_link_libraries(matrix_malos ${MATRIX_PROTOS_LIB})
+  target_link_libraries(matrix_malos ${CMAKE_THREAD_LIBS_INIT})
+
 
 # Binary to be installed.
 install(TARGETS matrix_malos_zmq DESTINATION lib)
