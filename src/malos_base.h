@@ -45,7 +45,7 @@ class MalosBase {
   // Thread that send updates to subscribers.
   void UpdateThread();
   // Thead that receives the keepalives.
-  void KeepAliveThread();
+  void KeepAliveThread(const std::string &bind_scope, int port);
 
   // This function should be overridden by drivers. Where is where they send
   // updates to subscribed processes.
