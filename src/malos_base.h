@@ -77,6 +77,8 @@ class MalosBase {
   // Fill out information about the driver.
   void FillOutDriverInfo(pb::driver::DriverInfo *driver_info) const;
 
+  bool IsActive() const { return is_active_; }
+
  private:
   // Base por of the driver.
   int base_port_;
@@ -109,9 +111,13 @@ class MalosBase {
 
  protected:
   // ZMQ channel where errors are sent.
-  std::unique_ptr<ZmqPusher> zmq_push_error_;
+  std::unique_ptr<ZmqPusher> zmq_push_status_;
   // ZMQ channel where actual data updates are sent.
   std::unique_ptr<ZmqPusher> zqm_push_update_;
+
+  void SendStatus(const pb::driver::Status::MessageType &type,
+                  const std::string &uuid = "",
+                  const std::string &message = "");
 };
 
 }  // namespace matrix_malos

@@ -27,8 +27,8 @@ bool MalosBase::Init(int base_port, const std::string &bind_scope) {
     return false;
   }
 
-  zmq_push_error_.reset(new ZmqPusher());
-  if (!zmq_push_error_->Init(base_port + 2, kOneThread, kSmallHighWaterMark,
+  zmq_push_status_.reset(new ZmqPusher());
+  if (!zmq_push_status_->Init(base_port + 2, kOneThread, kSmallHighWaterMark,
                              bind_scope)) {
     return false;
   }
@@ -56,6 +56,19 @@ bool MalosBase::Init(int base_port, const std::string &bind_scope) {
   return true;
 }
 
+void MalosBase::SendStatus(const pb::driver::Status::MessageType &type,
+                const std::string &uuid, const std::string &message) {
+  pb::driver::Status status;
+  status.set_type(type);
+  status.set_uuid(uuid);
+  status.set_message(message);
+
+  std::string buffer;
+  status.SerializeToString(&buffer);
+  zmq_push_status_->Send(buffer);
+}
+
+
 void MalosBase::ConfigThread() {
   // TODO: Fill out key/value pairs and make them readable by
   // derived classes.
@@ -67,8 +80,10 @@ void MalosBase::ConfigThread() {
       if (!config.ParseFromString(zmq_pull_config_->Read())) {
         std::cerr << "Invalid configuration for " << driver_name_ << " driver."
                   << std::endl;
-        zmq_push_error_->Send("0, Invalid configuration for " + driver_name_ +
-                              " driver. Could not parse protobuf.");
+        SendStatus(pb::driver::Status::ERROR, "",
+                   "Invalid configuration for " + driver_name_ +
+                       " driver. Could not parse protobuf.");
+
         has_been_configured_ = false;
         continue;
       }
@@ -78,8 +93,10 @@ void MalosBase::ConfigThread() {
       // the camera and the detectors need to be configured.
       if (!ProcessConfig(config)) {
         std::cerr << "Specific config for " << driver_name_ << " failed.";
-        zmq_push_error_->Send("0, Invalid specific configuration for " +
-                              driver_name_ + " driver.");
+        SendStatus(pb::driver::Status::ERROR, "",
+                   "Invalid specific configuration for " + driver_name_ +
+                       " driver. Could not parse protobuf.");
+
         has_been_configured_ = false;
         continue;
       }
@@ -120,8 +137,8 @@ void MalosBase::UpdateThread() {
       continue;
     }
     if (!SendUpdate()) {
-      zmq_push_error_->Send("1, Could not send update for " + driver_name_ +
-                            " driver.");
+      SendStatus(pb::driver::Status::ERROR, "",
+                 "Could not send update for " + driver_name_ + " driver.");
     }
     config_mutex_.unlock();
     std::this_thread::sleep_for(
