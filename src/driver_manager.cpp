@@ -17,6 +17,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "../src/third_party/zmq.hpp"
 
@@ -25,6 +26,18 @@
 #include <matrix_io/malos/v1/driver.pb.h>
 
 namespace pb = matrix_io::malos::v1;
+
+namespace std {
+
+template <typename T>
+std::string to_string(T value)
+{
+    std::ostringstream os ;
+    os << value ;
+    return os.str() ;
+}
+
+};
 
 namespace matrix_malos {
 
