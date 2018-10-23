@@ -80,7 +80,7 @@ void MalosBase::ConfigThread() {
       if (!config.ParseFromString(zmq_pull_config_->Read())) {
         std::cerr << "Invalid configuration for " << driver_name_ << " driver."
                   << std::endl;
-        SendStatus(pb::driver::Status::ERROR, "",
+        SendStatus(pb::driver::Status::STATUS_ERROR, "",
                    "Invalid configuration for " + driver_name_ +
                        " driver. Could not parse protobuf.");
 
@@ -93,7 +93,7 @@ void MalosBase::ConfigThread() {
       // the camera and the detectors need to be configured.
       if (!ProcessConfig(config)) {
         std::cerr << "Specific config for " << driver_name_ << " failed.";
-        SendStatus(pb::driver::Status::ERROR, "",
+        SendStatus(pb::driver::Status::STATUS_ERROR, "",
                    "Invalid specific configuration for " + driver_name_ +
                        " driver. Could not parse protobuf.");
 
@@ -137,7 +137,7 @@ void MalosBase::UpdateThread() {
       continue;
     }
     if (!SendUpdate()) {
-      SendStatus(pb::driver::Status::ERROR, "",
+      SendStatus(pb::driver::Status::STATUS_ERROR, "",
                  "Could not send update for " + driver_name_ + " driver.");
     }
     config_mutex_.unlock();
