@@ -150,6 +150,7 @@ void MalosBase::KeepAliveThread(const std::string &bind_scope, int port) {
   zmq::context_t context(kOneThread);
   zmq::socket_t socket(context, ZMQ_REP);
   socket.bind("tcp://" + bind_scope + ":" + std::to_string(port));
+  socket.setsockopt(ZMQ_RCVTIMEO, timeout_after_last_ping_);
 
   while (true) {
     zmq::message_t request;
