@@ -45,9 +45,9 @@ set(matrix_malos_src
 )
 
 include_directories (
-  ${ZMQ_INCLUDE_DIRS} 
+  ${ZMQ_INCLUDE_DIR} 
+  ${MATRIX_PROTOS_INCLUDE_DIR}
   ${PROTOBUF_INCLUDE_DIR}
-  ${MATRIXIO_INCLUDE_DIRS}
 )
 
 add_library(matrix_malos ${matrix_malos_src})
@@ -55,9 +55,6 @@ set_property(TARGET matrix_malos PROPERTY CXX_STANDARD 11)
 
 if (MSVC)
   target_link_libraries(matrix_malos matrix_malos_zmq.dll)
-  include_directories(${ZMQ_INCLUDE_DIR})
-  include_directories(${MATRIX_PROTOS_INCLUDE_DIR})
-  include_directories(${PROTOBUF_INCLUDE_DIR})
 else ()
   target_link_libraries(matrix_malos matrix_malos_zmq)
 endif ()
