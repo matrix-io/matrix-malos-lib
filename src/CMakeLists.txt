@@ -31,11 +31,9 @@ set(matrix_malos_zmq_src
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-if (MSVC)
-  add_library(matrix_malos_zmq ${matrix_malos_zmq_src})
-else ()
-  add_library(matrix_malos_zmq SHARED ${matrix_malos_zmq_src})
-endif ()
+
+add_library(matrix_malos_zmq ${matrix_malos_zmq_src})
+
 set_property(TARGET matrix_malos_zmq PROPERTY CXX_STANDARD 11)
 target_link_libraries(matrix_malos_zmq ${ZMQ_LIB} ${CMAKE_THREAD_LIBS_INIT})
 
