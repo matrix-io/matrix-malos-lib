@@ -150,9 +150,16 @@ void MalosBase::KeepAliveThread(const std::string &bind_scope, int port) {
   zmq::context_t context(kOneThread);
   zmq::socket_t socket(context, ZMQ_REP);
   socket.bind("tcp://" + bind_scope + ":" + std::to_string(port));
+
+  int last_set_timeout = timeout_after_last_ping_;
   socket.setsockopt(ZMQ_RCVTIMEO, timeout_after_last_ping_);
 
   while (true) {
+    if (timeout_after_last_ping_ != last_set_timeout) {
+      socket.setsockopt(ZMQ_RCVTIMEO, timeout_after_last_ping_);
+      last_set_timeout = timeout_after_last_ping_;
+    }
+
     zmq::message_t request;
     zmq::message_t reply(0);
 
