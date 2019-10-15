@@ -27,13 +27,8 @@ bool MalosBase::Init(int base_port, const std::string &bind_scope) {
     return false;
   }
 
-  zmq_pull_keepalive_.reset(new ZmqPuller());
-  if (!zmq_pull_keepalive_->Init(base_port + 1, kOneThread, bind_scope)) {
-    return false;
-  }
-
-  zmq_push_error_.reset(new ZmqPusher());
-  if (!zmq_push_error_->Init(base_port + 2, kOneThread, kSmallHighWaterMark,
+  zmq_push_status_.reset(new ZmqPusher());
+  if (!zmq_push_status_->Init(base_port + 2, kOneThread, kSmallHighWaterMark,
                              bind_scope)) {
     return false;
   }
@@ -48,7 +43,8 @@ bool MalosBase::Init(int base_port, const std::string &bind_scope) {
   std::thread config_thread(&MalosBase::ConfigThread, this);
   config_thread.detach();
   // Receive pings.
-  std::thread keepalive_thread(&MalosBase::KeepAliveThread, this);
+  std::thread keepalive_thread(&MalosBase::KeepAliveThread, this, bind_scope,
+                               base_port + 1);
   keepalive_thread.detach();
   // Send update to clients.
   std::thread update_thread(&MalosBase::UpdateThread, this);
@@ -59,6 +55,19 @@ bool MalosBase::Init(int base_port, const std::string &bind_scope) {
 
   return true;
 }
+
+void MalosBase::SendStatus(const pb::driver::Status::MessageType &type,
+                const std::string &uuid, const std::string &message) {
+  pb::driver::Status status;
+  status.set_type(type);
+  status.set_uuid(uuid);
+  status.set_message(message);
+
+  std::string buffer;
+  status.SerializeToString(&buffer);
+  zmq_push_status_->Send(buffer);
+}
+
 
 void MalosBase::ConfigThread() {
   // TODO: Fill out key/value pairs and make them readable by
@@ -71,8 +80,10 @@ void MalosBase::ConfigThread() {
       if (!config.ParseFromString(zmq_pull_config_->Read())) {
         std::cerr << "Invalid configuration for " << driver_name_ << " driver."
                   << std::endl;
-        zmq_push_error_->Send("0, Invalid configuration for " + driver_name_ +
-                              " driver. Could not parse protobuf.");
+        SendStatus(pb::driver::Status::STATUS_ERROR, "",
+                   "Invalid configuration for " + driver_name_ +
+                       " driver. Could not parse protobuf.");
+
         has_been_configured_ = false;
         continue;
       }
@@ -82,8 +93,10 @@ void MalosBase::ConfigThread() {
       // the camera and the detectors need to be configured.
       if (!ProcessConfig(config)) {
         std::cerr << "Specific config for " << driver_name_ << " failed.";
-        zmq_push_error_->Send("0, Invalid specific configuration for " +
-                              driver_name_ + " driver.");
+        SendStatus(pb::driver::Status::STATUS_ERROR, "",
+                   "Invalid specific configuration for " + driver_name_ +
+                       " driver. Could not parse protobuf.");
+
         has_been_configured_ = false;
         continue;
       }
@@ -124,8 +137,8 @@ void MalosBase::UpdateThread() {
       continue;
     }
     if (!SendUpdate()) {
-      zmq_push_error_->Send("1, Could not send update for " + driver_name_ +
-                            " driver.");
+      SendStatus(pb::driver::Status::STATUS_ERROR, "",
+                 "Could not send update for " + driver_name_ + " driver.");
     }
     config_mutex_.unlock();
     std::this_thread::sleep_for(
@@ -133,13 +146,25 @@ void MalosBase::UpdateThread() {
   }
 }
 
-void MalosBase::KeepAliveThread() {
+void MalosBase::KeepAliveThread(const std::string &bind_scope, int port) {
+  zmq::context_t context(kOneThread);
+  zmq::socket_t socket(context, ZMQ_REP);
+  socket.bind("tcp://" + bind_scope + ":" + std::to_string(port));
+
+  int last_set_timeout = timeout_after_last_ping_;
+  socket.setsockopt(ZMQ_RCVTIMEO, timeout_after_last_ping_);
+
   while (true) {
-    is_active_ = zmq_pull_keepalive_->Poll(timeout_after_last_ping_);
-    if (is_active_) {
-      // Discard anything that was received. Just a ping, man.
-      zmq_pull_keepalive_->Read();
+    if (timeout_after_last_ping_ != last_set_timeout) {
+      socket.setsockopt(ZMQ_RCVTIMEO, timeout_after_last_ping_);
+      last_set_timeout = timeout_after_last_ping_;
     }
+
+    zmq::message_t request;
+    zmq::message_t reply(0);
+
+    is_active_ = socket.recv(&request);  // ping
+    if (is_active_) socket.send(reply);  // pong
   }
 }
 
