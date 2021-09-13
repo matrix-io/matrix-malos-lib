@@ -6,7 +6,7 @@ Library of Hardware abstraction for MATRIX Creator usable via 0MQ.
 ## Installation
 ```
 # Add repo and key
-curl https://apt.matrix.one/doc/apt-key.gpg | sudo apt-key add -
+curl -L https://apt.matrix.one/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.matrix.one/raspbian $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/matrixlabs.list
 
 # Update packages and install
